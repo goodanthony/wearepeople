@@ -1,0 +1,30 @@
+{
+  "name": "Rails 8 + Node 24 + Postgres 18",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/work",
+  "runServices": [
+    "db",
+    "app"
+  ],
+  "remoteUser": "app",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "username": "app"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "forwardPorts": [
+    3000
+  ],
+  "postCreateCommand": "set -e; bundle config set path '/usr/local/bundle'; (rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/pnpm || true && corepack enable) || true"
+}

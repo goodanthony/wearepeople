@@ -1,0 +1,62 @@
+# syntax=docker/dockerfile:1
+# check=error=true
+
+ARG RUBY_VERSION=3.4.7
+FROM docker.io/library/ruby:${RUBY_VERSION}-slim
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+
+RUN apt-get update -qq && \
+  apt-get install -y wget gnupg && \
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+  echo "deb http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+  apt-get update -qq
+
+RUN apt-get update -qq && \
+  apt-get install --no-install-recommends -y \
+  build-essential \
+  git \
+  curl \
+  nodejs \
+  npm \
+  postgresql-client-18 \
+  libpq-dev \
+  libyaml-dev \
+  libvips \
+  less \
+  vim && \
+  rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+RUN groupadd --gid "${GROUP_ID}" rails || true && \
+  useradd  --uid "${USER_ID}" --gid "${GROUP_ID}" \
+  --create-home --shell /bin/bash rails || true && \
+  mkdir -p /usr/local/bundle && \
+  chown -R "${USER_ID}:${GROUP_ID}" /usr/local/bundle
+
+WORKDIR /work
+
+ENV RAILS_ENV=development \
+  NODE_ENV=development \
+  BUNDLE_PATH=/usr/local/bundle \
+  BUNDLE_JOBS=4 \
+  BUNDLE_RETRY=3 \
+  BUNDLE_WITHOUT=""
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY bin ./bin
+RUN chmod +x ./bin/* || true
+
+# Copy entrypoint to a path that won't be hidden by the /work bind mount
+COPY script/entrypoint.dev.sh /usr/local/bin/entrypoint.dev.sh
+RUN chmod +x /usr/local/bin/entrypoint.dev.sh
+
+USER rails
+
+EXPOSE 3000
+
+ENTRYPOINT ["entrypoint.dev.sh"]
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]

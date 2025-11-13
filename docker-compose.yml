@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: app_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # PG 18+ uses a versioned default path inside the image; set explicitly for clarity
+      PGDATA: /var/lib/postgresql/18/docker
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    environment:
+      RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+      DATABASE_URL: postgres://postgres:postgres@db:5432/app_development
+      BUNDLE_PATH: /usr/local/bundle
+    volumes:
+      - .:/work:delegated
+      - bundle:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+
+volumes:
+  bundle:
+  pgdata:
