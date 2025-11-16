@@ -24,3 +24,10 @@ Things you may want to cover:
 * ...
 
 grep -r "password\|secret\|key\|token" --exclude-dir={node_modules,.git,tmp,log}
+
+Database migrations
+# Run main database migrations (if you have any business logic migrations)
+bundle exec rails db:migrate
+
+# Run infrastructure database migrations
+bundle exec rails db:migrate:infrastructure

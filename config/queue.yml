@@ -7,6 +7,10 @@ default: &default
       threads: 3
       processes: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
       polling_interval: 0.1
+  connects_to:
+    database:
+      writing: infrastructure
+
 
 development:
   <<: *default

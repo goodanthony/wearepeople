@@ -31,7 +31,6 @@ services:
       BUNDLE_PATH: /usr/local/bundle
     volumes:
       - .:/work:delegated
-      - bundle:/usr/local/bundle
     ports:
       - "3000:3000"
     depends_on:
@@ -41,5 +40,4 @@ services:
     stdin_open: true
 
 volumes:
-  bundle:
   pgdata:
