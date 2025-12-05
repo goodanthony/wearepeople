@@ -21,8 +21,24 @@ default: &default
 
 
 development:
-  <<: *default
-  database: wearepeople_development
+  primary:
+    <<: *default
+    database: wearepeople_development
+    host:     <%= ENV.fetch("DEV_HOST") %>
+    port:     5432
+    username: <%= ENV.fetch("DEV_USER") %>
+    password: <%= ENV.fetch("DEV_PASS") %>
+    pool:     5
+
+   # Secondary database
+  infrastructure:
+    <<: *default
+    database: wearepeople_infrastructure_dev
+    host:     <%= ENV.fetch("DEV_HOST") %>
+    port:     5432
+    username: <%= ENV.fetch("DEV_USER") %>
+    password: <%= ENV.fetch("DEV_PASS") %>
+    migrations_paths: db/infrastructure_migrate
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -55,9 +71,31 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: wearepeople_test
+  primary:
+    <<: *default
+    database: wearepeople_test
+  
+  infrastructure:
+    <<: *default
+    database: wearepeople_infrastructure_test
+    migrations_paths: db/infrastructure_migrate
 
+
+staging:
+  primary:
+    <<: *default
+    database: wearepeople_staging
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
+    host: <%= ENV['DATABASE_HOST'] %>
+  
+  infrastructure:
+    <<: *default
+    database: wearepeople_infrastructure_staging
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
+    host: <%= ENV['DATABASE_HOST'] %>
+    migrations_paths: db/infrastructure_migrate
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -79,14 +117,22 @@ test:
 # environment variables. The variable name is formed by concatenating the
 # connection name with `_DATABASE_URL`. For example:
 #
-#   CACHE_DATABASE_URL="postgres://cacheuser:cachepass@localhost/cachedatabase"
+#   INFRASTRUCTURE_DATABASE_URL="postgres://user:pass@localhost/infrastructure"
 #
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: wearepeople_production
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  host: <%= ENV['DATABASE_HOST'] %>
+  primary:
+    <<: *default
+    database: wearepeople_production
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
+    host: <%= ENV['DATABASE_HOST'] %>
+  infrastructure:
+    <<: *default
+    database: wearepeople_infrastructure
+    username: <%= ENV['DATABASE_USERNAME'] %>
+    password: <%= ENV['DATABASE_PASSWORD'] %>
+    host: <%= ENV['DATABASE_HOST'] %>
+    migrations_paths: db/infrastructure_migrate

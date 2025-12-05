@@ -46,6 +46,11 @@
 yarn-debug.log*
 .yarn-integrity
 
+
+# Ignore bundler artifacts
+.bundle/
+vendor/bundle/
+
 # Ignore Docker volumes (if you accidentally create them locally)
 /postgres-data
 
@@ -58,3 +63,4 @@ yarn-debug.log*
 
 # Ignore macOS files
 .DS_Store
+
