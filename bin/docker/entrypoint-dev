@@ -1,9 +1,9 @@
-#!/bin/bash -e
+#!/bin/bash
+set -o pipefail
 
-# Ensure gems are installed (inside container only)
-if ! bundle check > /dev/null 2>&1; then
-  echo "Installing gems inside container..."
-  bundle install
-fi
+echo "Starting dev container entrypoint..."
 
-exec "${@}"
+# Remove stale server PID so Rails can always boot in dev containers
+rm -f tmp/pids/server.pid
+
+exec "$@"

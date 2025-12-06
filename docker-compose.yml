@@ -20,9 +20,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      args:
-        USER_ID: ${UID:-1000}
-        GROUP_ID: ${GID:-1000}
     environment:
       RAILS_ENV: development
       RAILS_LOG_TO_STDOUT: "true"

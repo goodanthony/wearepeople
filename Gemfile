@@ -50,6 +50,7 @@ group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 
+  gem "rubocop", require: false
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
   gem "dotenv-rails", "~> 3.1"
@@ -58,6 +59,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "ruby-lsp", require: false
 end
 
 group :test do
@@ -67,3 +69,6 @@ group :test do
 end
 
 
+
+gem "sentry-ruby", "~> 6.2"
+gem "sentry-rails", "~> 6.2"

@@ -54,8 +54,10 @@ vendor/bundle/
 # Ignore Docker volumes (if you accidentally create them locally)
 /postgres-data
 
-# Ignore editor files
-/.vscode
+# Ignore editor files share settings.json and extensions
+/.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 /.idea
 *.swp
 *.swo
