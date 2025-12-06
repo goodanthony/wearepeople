@@ -11,7 +11,9 @@ FROM docker.io/library/ruby:${RUBY_VERSION} AS base
 
 # Rails app lives here
 WORKDIR /rails
+ENV BUNDLER_VERSION=4.0.0
 
+RUN gem install bundler --conservative --version "$BUNDLER_VERSION"
 # Install runtime packages (very similar family to dev)
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
@@ -23,7 +25,8 @@ RUN apt-get update -qq && \
     libvips \
     postgresql-client && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives && \
+    corepack enable
 
 # Production env + jemalloc
 ENV RAILS_ENV="production" \
