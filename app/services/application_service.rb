@@ -45,7 +45,7 @@ class ApplicationService
   #
   # Usage A: Background Jobs (Triggers Active Job 'retry_on')
   #   def perform(id)
-  #     ProcessImage.call!(id: id) 
+  #     ProcessImage.call!(id: id)
   #   end
   #
   # Usage B: Database Transactions (Triggers Rollback)
