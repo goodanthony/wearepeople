@@ -46,6 +46,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint
 
 # Ensure /work exists and is owned by rails BEFORE switching user
 RUN mkdir -p /work && chown -R rails:rails /work
+RUN mkdir -p /usr/local/bundle && chown -R rails:rails /usr/local/bundle
 
 USER rails
 WORKDIR /work
